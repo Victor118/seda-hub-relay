@@ -12,6 +12,11 @@ This builds on the light client verification primitive from [interchain-event](h
 |---|---|
 | [`seda-relay-contract-spec.md`](seda-relay-contract-spec.md) | Specification of the relay contract, the relayer flow, and a push price feed variant |
 | [`demos/seda-verify`](demos/seda-verify) | Off-chain, read-only check against mainnet: proves a real seda-1 `DataResult` against the Hub's light client |
+| [`use-cases/`](use-cases) | Specs of example applications built on the relay |
+
+## Example use cases
+
+- **[Dev grants paid on merge](use-cases/dev-grant-contract-spec.md).** A developer and the Hub sign a grant contract funded by the community pool through governance. When the developer's PR is merged, a GitHub oracle program attests it, and the contract pays the developer, with no multisig in between. If nothing is delivered by the deadline, the funds return to the community pool.
 
 ## Status
 
