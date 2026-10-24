@@ -409,6 +409,25 @@ else    accept the update, no bounty
 - Relayers pay SEDA before they know the result, so they should trigger with a margin above the threshold.
 - The threshold reduces cost, not latency.
 
+### Funding and cost
+
+Each update costs SEDA fees (`gas_price × (exec_gas_limit + tally_gas_limit)`, in SEDA) plus Hub gas for `MsgUpdateClient` and `Submit`. Feeds need a budget that pays relayers.
+
+**Who pays**
+
+- **Consumer protocols.** A lending protocol deposits a budget into the feed contract. Reads cannot be charged, since CosmWasm queries are free, so funding goes through deposits or subscriptions, not per read.
+- **The community pool**, through a governance proposal. Price feeds are a public good the Hub's DeFi currently lacks. `MsgCommunityPoolSpend` can fund the feed contract directly.
+- **SEDA.** Every request burns SEDA, so regular requests from the Hub benefit SEDA directly. Ecosystem grants or bootstrap funding are worth asking for.
+
+**Reducing the cost per update**
+
+1. **Several prices per request.** One oracle program can return N prices (see `multi-price-feed` in [`seda-example-ops`](https://github.com/sedaprotocol/seda-example-ops)). The SEDA cycle and the proof are then shared by all assets.
+2. **One `MsgUpdateClient` per transaction.** Several `Submit` messages at the same proof height share one client update, which is often the most expensive part.
+3. **Deviation and heartbeat triggers**, as above: only useful updates are paid.
+4. **Frequency matched to the use case.** Conservative lending can live with a 10–30 minute heartbeat plus a deviation threshold for sharp moves.
+
+To be measured on testnet: Hub gas for `MsgUpdateClient` and `Submit`, and SEDA fees for a multi-price request. That gives a cost per update, and so a monthly budget per feed.
+
 ---
 
 ## Security Summary
